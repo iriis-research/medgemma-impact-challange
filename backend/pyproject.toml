@@ -1,0 +1,30 @@
+[tool.pyright]
+venvPath = "."
+venv = "app/venv"
+include = ["app"]
+exclude = ["**/__pycache__", "**/node_modules", "app/venv"]
+typeCheckingMode = "basic"
+reportMissingImports = true
+reportMissingTypeStubs = false
+
+[tool.black]
+line-length = 100
+target-version = ['py312']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  # directories
+  \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | venv
+  | app/venv
+  | _build
+  | buck-out
+  | build
+  | dist
+)/
+'''

@@ -1,0 +1,135 @@
+# ClariCare AI - Complete Backend Docker Setup
+# This includes: PostgreSQL, Redis, Qdrant, and Backend API
+# Frontend runs separately (not in Docker)
+
+services:
+  # PostgreSQL Database
+  db:
+    image: postgres:15-alpine
+    container_name: nidanmitra-db
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=nidanmitra
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - nidanmitra-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: nidanmitra-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - nidanmitra-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  # Qdrant Vector Database (for RAG features)
+  qdrant:
+    image: qdrant/qdrant:latest
+    container_name: nidanmitra-qdrant
+    restart: unless-stopped
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    volumes:
+      - qdrant_data:/qdrant/storage
+    networks:
+      - nidanmitra-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:6333/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  # Backend API Service
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nidanmitra-backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      # Database
+      - DATABASE_URL=postgresql+asyncpg://postgres:postgres@db:5432/nidanmitra
+      # Redis
+      - REDIS_URL=redis://redis:6379/0
+      # JWT Authentication
+      - SECRET_KEY=${SECRET_KEY:-your-super-secret-key-change-in-production}
+      - ACCESS_TOKEN_EXPIRE_MINUTES=30
+      # MedGemma Model
+      - HF_TOKEN=${HF_TOKEN:-}
+      - MEDGEMMA_MODEL_ID=${MEDGEMMA_MODEL_ID:-google/medgemma-1.5-4b-it}
+      - USE_LOCAL_MODEL=${USE_LOCAL_MODEL:-true}
+      - DEVICE=${DEVICE:-cpu}
+      - USE_4BIT_QUANTIZATION=${USE_4BIT_QUANTIZATION:-true}
+      - MAX_NEW_TOKENS=${MAX_NEW_TOKENS:-2048}
+      # Vector Database
+      - QDRANT_HOST=qdrant
+      - QDRANT_PORT=6333
+      # Storage (optional - for S3)
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID:-}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY:-}
+      - AWS_REGION=${AWS_REGION:-us-east-1}
+      - STORAGE_BUCKET=${STORAGE_BUCKET:-nidanmitra-documents}
+      # Application
+      - DEBUG=${DEBUG:-false}
+      - APP_NAME=ClariCare AI
+    volumes:
+      # Model cache directory
+      - models_data:/app/models
+      # Uploads directory
+      - uploads_data:/app/uploads
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      qdrant:
+        condition: service_healthy
+    networks:
+      - nidanmitra-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 180s
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+  qdrant_data:
+    driver: local
+  models_data:
+    driver: local
+  uploads_data:
+    driver: local
+
+networks:
+  nidanmitra-network:
+    driver: bridge

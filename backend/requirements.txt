@@ -1,0 +1,64 @@
+# NidanMitra AI Backend Dependencies
+fastapi==0.109.0
+uvicorn[standard]==0.27.0
+python-multipart==0.0.6
+pydantic==2.5.3
+pydantic-settings==2.1.0
+email-validator==2.3.0
+
+# Database
+sqlalchemy==2.0.25
+asyncpg==0.29.0
+alembic==1.13.1
+greenlet>=3.0.0
+
+# Authentication
+python-jose[cryptography]==3.3.0
+bcrypt>=4.0.0
+
+# ===========================================
+# AI/ML - MedGemma with Transformers
+# ===========================================
+# PyTorch - Install the appropriate version for your system:
+# Mac (MPS): pip install torch torchvision
+# Linux/Windows (CPU): pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+# Linux (CUDA): pip install torch torchvision --index-url https://download.pytorch.org/whl/cu121
+torch>=2.1.0
+torchvision>=0.16.0
+
+# Transformers (MedGemma requires >= 4.50.0)
+transformers>=4.50.0
+accelerate>=0.26.0
+huggingface-hub>=0.20.0
+sentencepiece>=0.2.0
+protobuf>=4.25.0
+
+# Google AI (fallback)
+google-generativeai==0.3.2
+langchain==0.1.4
+langchain-google-genai==0.0.6
+
+# Vector DB
+qdrant-client>=1.7.1
+
+# Document Processing
+pypdf2==3.0.1
+pdf2image==1.17.0
+pytesseract==0.3.10
+pillow>=11.0.0
+
+# Redis & Celery
+redis==5.0.1
+celery==5.3.6
+
+# Storage
+boto3==1.34.25
+
+# Utilities
+httpx==0.26.0
+python-dateutil==2.8.2
+python-dotenv==1.0.0
+
+# Image/scientific processing
+scipy>=1.11.0
+numpy>=1.24.0
