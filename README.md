@@ -1,9 +1,9 @@
-# ClariCare AI - Patient Understanding & Adherence Companion
+# NidanMitra AI - Patient Understanding & Adherence Companion
 
-![NidanMitra AI](https://img.shields.io/badge/ClariCare-AI%20Health%20Companion-10b99b)
+![NidanMitra AI](https://img.shields.io/badge/NidanMitra-AI%20Health%20Companion-10b99b)
 ![License](https://img.shields.io/badge/license-MIT-blue)
 
-ClariCare AI is a web-based patient assistant that empowers patients to understand, trust, and follow their medical care using an AI-powered, medically grounded conversational interface.
+NidanMitra AI is a web-based patient assistant that empowers patients to understand, trust, and follow their medical care using an AI-powered, medically grounded conversational interface.
 
 ## 🌟 Features
 
@@ -160,7 +160,7 @@ pip install -r requirements.txt
 
 # Set up environment variables
 cat > .env << EOF
-DATABASE_URL=postgresql+asyncpg://postgres:postgres@localhost:5432/claricare
+DATABASE_URL=postgresql+asyncpg://postgres:postgres@localhost:5432/NidanMitra
 REDIS_URL=redis://localhost:6379/0
 SECRET_KEY=your-super-secret-key
 HF_TOKEN=your-huggingface-token
@@ -184,7 +184,7 @@ uvicorn app.main:app --reload --port 8000
 
 ```env
 # Database (auto-configured in Docker)
-DATABASE_URL=postgresql+asyncpg://postgres:postgres@db:5432/claricare
+DATABASE_URL=postgresql+asyncpg://postgres:postgres@db:5432/NidanMitra
 
 # Redis (auto-configured in Docker)
 REDIS_URL=redis://redis:6379/0
@@ -219,7 +219,7 @@ NEXT_PUBLIC_API_URL=http://localhost:8000/api
 
 ## 🎨 Design System
 
-ClariCare uses a warm, trustworthy healthcare palette:
+NidanMitra uses a warm, trustworthy healthcare palette:
 
 - **Primary**: Teal (`#10b99b`) - Trust and healing
 - **Accent**: Orange (`#f97316`) - Warmth and energy
@@ -293,7 +293,7 @@ MIT License - see LICENSE file for details.
 
 ## ⚠️ Medical Disclaimer
 
-ClariCare AI provides educational health information only. It is not a substitute for professional medical advice, diagnosis, or treatment. Always seek the advice of your physician or other qualified health provider with any questions you may have regarding a medical condition.
+NidanMitra AI provides educational health information only. It is not a substitute for professional medical advice, diagnosis, or treatment. Always seek the advice of your physician or other qualified health provider with any questions you may have regarding a medical condition.
 
 ---
 
